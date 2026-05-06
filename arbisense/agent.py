@@ -17,7 +17,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .collectors import DefiLlamaCollector, UniswapCollector, AaveCollector
+from .collectors import DefiLlamaCollector, UniswapCollector, AaveCollector, GmxCollector
 from .analyzer import MarketAnalyzer
 from .onchain import OnChainClient
 
@@ -45,6 +45,7 @@ class ArbiSenseAgent:
         self.defillama = DefiLlamaCollector()
         self.uniswap = UniswapCollector()
         self.aave = AaveCollector()
+        self.gmx = GmxCollector()
         self.analyzer = MarketAnalyzer()
 
         if not dry_run:
@@ -69,9 +70,12 @@ class ArbiSenseAgent:
         log.info("Collecting Aave v3 data …")
         aave_data = self._safe_collect(self.aave.collect, "aave")
 
+        log.info("Collecting GMX v2 data …")
+        gmx_data = self._safe_collect(self.gmx.collect, "gmx")
+
         # Step 2: Analyse
         log.info("Running market analysis …")
-        result = self.analyzer.analyze(defi_data, uni_data, aave_data)
+        result = self.analyzer.analyze(defi_data, uni_data, aave_data, gmx_data)
         log.info(
             "Score: %d/100 (%s) | %s",
             result["score"],
