@@ -164,6 +164,77 @@ def gmx_empty():
     return {}
 
 
+# ── Uniswap pools fixtures ────────────────────────────────────────────────────
+
+@pytest.fixture
+def yields_pools_response():
+    """Minimal yields.llama.fi/pools payload with Uniswap v3 Arbitrum pools."""
+    return {
+        "data": [
+            # Uniswap v3 Arbitrum — WETH/USDC
+            {
+                "pool": "0xaaa-111",
+                "project": "uniswap-v3",
+                "chain": "Arbitrum",
+                "symbol": "WETH-USDC",
+                "tvlUsd": 50_000_000,
+                "apy": 12.5,
+                "apyBase": 10.0,
+                "volumeUsd1d": 8_000_000,
+                "feeTier": "500",
+            },
+            # Uniswap v3 Arbitrum — WBTC/WETH
+            {
+                "pool": "0xbbb-222",
+                "project": "uniswap-v3",
+                "chain": "Arbitrum",
+                "symbol": "WBTC-WETH",
+                "tvlUsd": 25_000_000,
+                "apy": 8.0,
+                "apyBase": 6.5,
+                "volumeUsd1d": 3_200_000,
+                "feeTier": "3000",
+            },
+            # Uniswap v3 on a different chain — should be excluded
+            {
+                "pool": "0xccc-333",
+                "project": "uniswap-v3",
+                "chain": "Ethereum",
+                "symbol": "USDC-USDT",
+                "tvlUsd": 900_000_000,
+                "apy": 2.0,
+                "apyBase": 2.0,
+                "volumeUsd1d": 150_000_000,
+                "feeTier": "100",
+            },
+            # Aave pool on Arbitrum — should be excluded
+            {
+                "pool": "0xddd-444",
+                "project": "aave-v3",
+                "chain": "Arbitrum",
+                "symbol": "USDC",
+                "tvlUsd": 300_000_000,
+                "apy": 5.0,
+                "apyBase": 5.0,
+                "volumeUsd1d": 0,
+                "feeTier": None,
+            },
+            # Uniswap v3 Arbitrum but below min TVL ($100k) — should be excluded
+            {
+                "pool": "0xeee-555",
+                "project": "uniswap-v3",
+                "chain": "Arbitrum",
+                "symbol": "RARE-WETH",
+                "tvlUsd": 50_000,
+                "apy": 200.0,
+                "apyBase": 180.0,
+                "volumeUsd1d": 1_000,
+                "feeTier": "10000",
+            },
+        ]
+    }
+
+
 # ── DeFiLlama raw protocol response (for GmxCollector unit tests) ─────────────
 
 @pytest.fixture

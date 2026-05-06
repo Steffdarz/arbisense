@@ -4,10 +4,10 @@ DeFiLlama collector — pulls TVL and protocol data for Arbitrum.
 Uses the public DeFiLlama REST API (no key required).
 """
 
-import requests
 from datetime import datetime, timezone
 from typing import Any
 
+from .base import make_session
 
 DEFILLAMA_BASE = "https://api.llama.fi"
 
@@ -25,10 +25,9 @@ ARBITRUM_PROTOCOLS = [
 class DefiLlamaCollector:
     """Fetch TVL data for Arbitrum DeFi protocols via DeFiLlama."""
 
-    def __init__(self, timeout: int = 15):
+    def __init__(self, timeout: int = 30):
         self.timeout = timeout
-        self.session = requests.Session()
-        self.session.headers["User-Agent"] = "ArbiSense/0.1 (+github.com/arbisense)"
+        self.session = make_session()
 
     # ── Public API ────────────────────────────────────────────────────────────
 

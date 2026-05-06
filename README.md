@@ -146,18 +146,21 @@ arbisense/
 │   └── deploy.js                # Hardhat deploy script
 ├── arbisense/
 │   ├── collectors/
+│   │   ├── base.py              # Shared session factory (urllib3 retry + User-Agent)
 │   │   ├── defi_llama.py        # DeFiLlama chain + protocol TVL
-│   │   ├── uniswap.py           # Uniswap v3 TVL + volume
+│   │   ├── uniswap.py           # Uniswap v3 TVL + volume + top pools
 │   │   ├── aave.py              # Aave v3 TVL + yields
-│   │   └── gmx.py               # GMX v2 AMM volume + TVL momentum (NEW)
+│   │   └── gmx.py               # GMX v2 AMM volume + TVL momentum
 │   ├── analyzer.py              # 4-component sentiment scoring engine (v1.1)
 │   ├── onchain.py               # SentinelRegistry client (web3.py)
 │   ├── agent.py                 # Main agent loop
 │   └── cli.py                   # CLI interface
 ├── tests/
 │   ├── conftest.py              # Shared fixtures (no live HTTP)
+│   ├── test_base.py             # 11 tests for session factory / retry config
 │   ├── test_analyzer.py         # 22 tests for scoring logic
-│   └── test_gmx_collector.py    # 14 tests for GMX collector
+│   ├── test_gmx_collector.py    # 14 tests for GMX collector
+│   └── test_uniswap_collector.py# 13 tests for Uniswap top_pools + collect()
 ├── hardhat.config.js
 ├── requirements.txt
 └── README.md
@@ -181,7 +184,7 @@ pip install pytest
 python3 -m pytest tests/ -v
 ```
 
-36 tests, 0 live HTTP calls — all network I/O is mocked via `unittest.mock`.
+60 tests, 0 live HTTP calls — all network I/O is mocked via `unittest.mock`.
 
 ---
 
@@ -192,6 +195,7 @@ python3 -m pytest tests/ -v
 - **Python 3.11 / web3.py** — agent runtime
 - **DeFiLlama API** — real-time TVL, volume, and yield data (no API key required)
 - **GMX v2** — Arbitrum-native perpetuals DEX data (official buildathon sponsor)
+- **urllib3 Retry** — automatic exponential-backoff retry on all collectors (3× max, covers 429/5xx + read timeouts)
 - **GitHub Actions** — CI on Python 3.11 + 3.12
 
 ---

@@ -5,9 +5,10 @@ Primary source: DeFiLlama protocol API (no key required).
 Uses DeFiLlama's lending/borrowing data endpoint for Aave v3.
 """
 
-import requests
 from datetime import datetime, timezone
 from typing import Any
+
+from .base import make_session
 
 DEFILLAMA_BASE = "https://api.llama.fi"
 
@@ -15,10 +16,9 @@ DEFILLAMA_BASE = "https://api.llama.fi"
 class AaveCollector:
     """Fetch Aave v3 Arbitrum market data via DeFiLlama."""
 
-    def __init__(self, timeout: int = 15):
+    def __init__(self, timeout: int = 30):
         self.timeout = timeout
-        self.session = requests.Session()
-        self.session.headers["User-Agent"] = "ArbiSense/0.1"
+        self.session = make_session()
 
     def protocol_data(self) -> dict[str, Any]:
         """Fetch Aave v3 TVL and lending data from DeFiLlama."""

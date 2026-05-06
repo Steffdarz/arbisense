@@ -8,10 +8,10 @@ Data is sourced from two public DeFiLlama endpoints (no API key required):
                                   shared between tvl and momentum calculation)
 """
 
-import requests
 from datetime import datetime, timezone
 from typing import Any
 
+from .base import make_session
 
 DEFILLAMA_BASE = "https://api.llama.fi"
 
@@ -32,10 +32,9 @@ class GmxCollector:
       - activity_score       : composite 0–100 score for use in MarketAnalyzer
     """
 
-    def __init__(self, timeout: int = 15):
+    def __init__(self, timeout: int = 30):
         self.timeout = timeout
-        self.session = requests.Session()
-        self.session.headers["User-Agent"] = "ArbiSense/0.1 (+github.com/arbisense)"
+        self.session = make_session()
 
     # ── Public API ────────────────────────────────────────────────────────────
 

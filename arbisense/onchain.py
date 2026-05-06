@@ -6,12 +6,9 @@ historical reports. Uses eth-account + direct JSON-RPC (no web3.py
 dependency required beyond what is already installed).
 """
 
-import json
 import os
-import time
 from typing import Any
 
-import requests
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 
@@ -126,8 +123,6 @@ class OnChainClient:
         sentiment_score: int,
         protocol: str,
     ) -> dict[str, Any]:
-        from web3 import Web3
-
         nonce = self.w3.eth.get_transaction_count(self.account.address)
         gas_price = self.w3.eth.gas_price
 
